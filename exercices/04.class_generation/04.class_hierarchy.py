@@ -1,7 +1,9 @@
 # Import des modules nécessaires
 import json
+import os
 from unidecode import unidecode
 import re
+from class_generation import generate_class_def
 
 # Charger des données JSON à partir du fichier dans un dictionnaire python
 local_path = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +29,17 @@ Elle prend les arguments suivant:
 def generate_class_hierarchy(json_dict :dict, superclass_name:str=None,superclass_args:list=[]):
     # Initialisation de la chaîne de caractères contenant les définitions de classes
     class_defs = ""
+    for key, value in json_dict.items():
+        if isinstance(value, dict):
+            name = key.replace(" ", "_").replace("-", "_")
+            class_def = generate_class_def(name, value,superclass_name,superclass_args)
+            class_defs += class_def
+        if "subclasses" in value.keys():
+            super_attr = list(value.keys()) + superclass_args
+            super_attr.remove("subclasses")
+            sous_class_def = generate_class_hierarchy(value["subclasses"], name, super_attr )
+            class_defs += sous_class_def
+    return class_defs
 
     """ 
     Itération sur les éléments du dictionnaire
@@ -68,3 +81,7 @@ def write_content(content,filename):
 # Appeler la méthode generate_class_hierarchy pour générer le code des classes automatiquement en se basant sur le dictionnaire json_dict
 # Stocker le résultat de la classe dans une variable
 # Appeler la fonction write_content pour stocker le code des classes dans un fichier Python 'product_classes.py'
+
+result = generate_class_hierarchy(json_dict)
+
+write_content(result,"product_classes.py")

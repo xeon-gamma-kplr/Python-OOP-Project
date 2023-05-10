@@ -100,7 +100,7 @@ def test_fonction():
     }
 
     code_classe = generate_class_def("Voiture", attributs, "Vehicule", ["marque", "modele"])
-    print(code_classe)
+
 
 if __name__ == '__main__':
     # Appeler la fonction principale

@@ -42,6 +42,8 @@ voiture1.afficher_attributs()
 
 moto1.afficher_attributs()
 
+print(dict(vars(moto1)))
+
 """
 Dans cet exemple, la méthode afficher_attributs est incluse dans la classe Vehicule. 
 Elle affiche les attributs communs (marque, modele et annee) pour chaque instance de la classe.

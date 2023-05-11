@@ -5,12 +5,56 @@ sys.path.extend(['.','..',"/workspaces/Python-OOP-Project/exercices/05.inventory
 from product_classes import *
 from inventory_product_entry import InventoryProductEntry
 
+
+
+class ProfitTracker:
+
+    # Le constructeur initialise la variable balance (solde)
+    def __init__(self):
+        self.balance = 1000
+        # Créer une variable 'balance' et l'initialiser à 1000 euros
+
+    #Méthode buy_product 
+    """   
+    La méthode buy_product est utilisée pour acheter un produit et mettre à jour le coût total et le solde.
+    """     
+    def buy_product(self, product: Product, quantity):
+        if product.cost * int(quantity) > 1000:
+            print("Solde insuffisant")
+            return False
+        else:
+            self.balance -= int(product.cost) * int(quantity)
+            return True
+
+
+        """
+        Vérifie si le solde est suffisant pour acheter la quantité demandée de produit
+            Si le solde est insuffisant:
+                affiche un message d'erreur 
+                retourne False pour indiquer que l'achat a échoué.
+            Sinon, si le solde est suffisant:
+                met à jour le solde en soustrayant le coût du produit multiplié par la quantité achetée
+                retourne True pour indiquer que l'achat a réussi
+        """
+        
+    #Méthode sell_product 
+    """   
+    La méthode sell_product est utilisée pour vendre un produit et mettre à jour le solde.
+    """  
+ 
+    def sell_product(self, product: Product, quantity):
+            self.balance += int(product.price) * int(quantity)
+        
+        # Met à jour le solde en ajoutant le prix du produit multiplié par la quantité vendue
+
+
 class InventoryManager:
     # Initialisation de la classe
     def __init__(self):
         # Vous initialisez un dictionnaire 'inventory' qui stocke l'inventaire de tous les produits
         # Il prend comme clé le nom du produit, et la valeur est un objet InventoryProductEntry
         self.inventory : Dict[str, InventoryProductEntry] = {}
+        self.profit_tracker = ProfitTracker()
 
     #Méthode product_exists
     """"
@@ -70,8 +114,10 @@ class InventoryManager:
     """
     
     def sell_product(self, product_name, quantity):
+        print(product_name, self.inventory)
         if product_name in self.inventory:
             self.inventory[product_name].sell(quantity)
+            print(f"Vente de {quantity} {product_name} effectuée")
         else:
             print("La vente a échouée")
         #Utiliser une boucle pour parcourir les clés du dictionnaire 'inventory'
@@ -86,7 +132,7 @@ class InventoryManager:
     """
     def restock_product(self, product, quantity):
         if product.name in self.inventory:
-            if self.inventory[product_name].restock(quantity):
+            if self.inventory[product.name].restock(quantity):
                 print("Restock réussi")
         else:
             self.add_product(product, quantity)
@@ -103,7 +149,7 @@ class InventoryManager:
     """
     def get_product(self, name):
         if name in self.inventory:
-            return self.inventaire[name].product
+            return self.inventory[name].product
         else:
             print(f"le produit {name} n'existe pas")
         

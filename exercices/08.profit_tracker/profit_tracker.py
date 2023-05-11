@@ -4,13 +4,22 @@ class ProfitTracker:
 
     # Le constructeur initialise la variable balance (solde)
     def __init__(self):
+        self.balance = 1000
         # Créer une variable 'balance' et l'initialiser à 1000 euros
 
     #Méthode buy_product 
     """   
     La méthode buy_product est utilisée pour acheter un produit et mettre à jour le coût total et le solde.
     """     
-    def buy_product(self, product: Product, quantity): 
+    def buy_product(self, product: Product, quantity):
+        if product.cost * quantity > 1000:
+            print("Solde insuffisant")
+            return False
+        else:
+            self.balance -= product.cost * quantity
+            return True
+
+
         """
         Vérifie si le solde est suffisant pour acheter la quantité demandée de produit
             Si le solde est insuffisant:
@@ -27,6 +36,7 @@ class ProfitTracker:
     """  
  
     def sell_product(self, product: Product, quantity):
+            self.balance += product.price * quantity
         
         # Met à jour le solde en ajoutant le prix du produit multiplié par la quantité vendue
 

@@ -44,6 +44,9 @@ class TestInventoryManager(unittest.TestCase):
         """
     # Test de la méthode sell_product de la classe InventoryManager
     def test_sell_product(self):
+        self.inventory_manager.add_product(self.pantalon, 5)
+        self.inventory_manager.sell_product(self.pantalon.name, 2)
+        self.assertEqual(3, self.inventory_manager.inventory[self.pantalon.name].quantity)
         """
          -Ajout de 5 pantalons à l'inventaire
          -Vente de 2 pantalons en utilisant la méthode sell_product
@@ -55,7 +58,11 @@ class TestInventoryManager(unittest.TestCase):
         
     # Test de la méthode restock_product de la classe InventoryManager
     def test_restock_product(self):
-         """
+        self.inventory_manager.add_product(self.chaise, 10)
+        self.inventory_manager.restock_product(self.chaise, 5)
+        self.assertEqual(15, self.inventory_manager.inventory["Chaise"].quantity)
+        
+        """
          -Ajout de 10 chaises à l'inventaire
          -Réapprovisionnement (restocker) de 5 chaises en utilisant la méthode restock_product
          -Vérification que le nombre de chaises en stock a bien été mis à jour avec la méthode assertEqual
@@ -63,14 +70,21 @@ class TestInventoryManager(unittest.TestCase):
         
     # Test de la méthode get_product de la classe InventoryManager
     def test_get_product(self):
-        
-         """
+        self.inventory_manager.add_product(self.chaise, 5)
+        chaise_recup = self.inventory_manager.get_product(self.chaise.name)
+        self.assertEqual(self.chaise, chaise_recup)
+        """
          -Ajout de 5 chaises à l'inventaire
          -Récupération de la chaise ajoutée précédemment en utilisant la méthode get_product
          -Vérification que la chaise récupérée est bien celle ajoutée précédemment avec la méthode assertEqual
-         """
+        """
     # Test de la méthode list_products de la classe InventoryManager
     def test_list_products(self):
+        self.inventory_manager.add_product(self.chaise, 5)
+        self.inventory_manager.add_product(self.pantalon, 10)
+        result = self.inventory_manager.list_products()
+        var_result = "Produit: Chaise, Marque: Ikea, Quantité: 5, Prix: 100"
+        self.assertEqual(var_result, str(result["Chaise"]))
         """ 
         - Ajout de 5 chaises et de 10 pantalons à l'inventaire
         - Lister les produits existants dans l'inventaire en utilisant la méthode list_products et stocker le résultat dans une variable

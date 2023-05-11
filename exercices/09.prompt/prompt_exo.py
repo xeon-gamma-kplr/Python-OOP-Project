@@ -1,12 +1,15 @@
 import sys
-sys.path.extend(['.','..'])
-from inventory.stock_manager import *
+sys.path.extend(['.','..','/workspaces/Python-OOP-Project/exercices/06.inventory_manager',"/workspaces/Python-OOP-Project/exercices/04.class_generation", "/workspaces/Python-OOP-Project/exercices/03.class_tree"])
+from inventory_manager import *
 import json
+from class_tree import *
 from unidecode import unidecode
-import generator
-from classes.product_classes import *
+# import generator
+from product_classes import *
+from class_generation import *
 import readline
 import utils
+import treelib
 
 # Define the prompt_for_instance function 
 # that takes a class name as a string as input
@@ -53,16 +56,28 @@ def main():
 
     inventory_manager = InventoryManager()
     # write code to read json file as dict
-        #
-        #    
+    local_path = os.path.dirname(os.path.abspath(__file__))
+    # Chargement des données JSON à partir du fichier dans un dictionnaire python
+    json_data = json.load(open("/workspaces/Python-OOP-Project/exercices/04.class_generation/json_data.json", "rb"))
 
-    readline.set_completer_delims(' \t\n')
+    # il est nécessaire de reconvertir le dictionnaire en chaine de caractere pour le traiter ensuite
+    json_str = json.dumps(json_data)
+
+    # Utilisation de la fonction unidecode pour enlever les accents et autres caractères spéciaux
+    json_data = (unidecode(json_str))
+    print(json_data)
+
+    # Conversion de la chaine de caractere JSON à nouveau en dictionnaire Python
+    # Le dictionnaire python est plus pratique à manipuler que la chaine de caractère car il est structuré
+    json_dict = json.loads(json_data)    
+
+    readline.set_completer_delims('\t\n')
     readline.parse_and_bind("tab: complete")
 
     # Define a function to handle user input
     def auto_complete(text, list):
         matching_entry = [entry for entry in list if entry.startswith(text)]
-        if len(matching_entry) == 1:
+        if len(matching_entry) >= 1:
             entry_name = matching_entry[0]
             remaining_text = entry_name[len(text):]
             if remaining_text:          
@@ -91,23 +106,24 @@ def main():
 
         if choice == "A":
             
-            print_list
+            # print_list
                 
             
             # write code to get class tree hierachy
             # convert the tree object to TreeExt to get the new functionalities 
             # described above in TreeExt class
-            # class_tree = TreeExt(generate_tree_hierarchy(json_dict))
-            
+            class_tree = TreeExt()
+            class_tree.create_node(tag="Racine", identifier="racine")
+            create_tree_from_dict(class_tree,"racine",json_dict)
             # ecrire le code pour récupérer les avant dernier noeus de classe
             # (dernier niveau de catégories de produits)
-            # product_classes = class_tree.get_penultimate_nodes()
-        
-            sep()
+            product_classes = class_tree.get_penultimate_nodes()
+            # for node in product_classes:
+            #     test_list.append(node.split(".")[-1])
 
             # write code to print list of product_classes
             #
-            #set_autocomplete(product_classes)
+            set_autocomplete(product_classes)
             category = input("Enter the category of the product: ")
             
             # Get the immediate children nodes of node 'B'
@@ -115,54 +131,56 @@ def main():
             # write code to print list of children_nodes
             #
             set_autocomplete(children_nodes)
+            print(children_nodes)
             product_name = input("Enter your product choice: ")   
             #print(f"{name} has been added to stock with a quantity of {quantity}.")
 
             # write code to create a instance of classe product_name
-            product_entry = prompt_for_instance(globals()[product_name])
+            product_entry = prompt_for_instance(globals()[product_name.split(".")[-1]])
             quantity = int(input("Enter quantity: "))
             # write code to add product_entry and quantity in Inventory Manager
-            #
+            inventory_manager.add_product(product_entry, quantity)
 
         elif choice == "R":
+            list_product = list(inventory_manager.list_products().keys())
+            set_autocomplete(list_product)
             name = input("Enter the name of the product: ")
             quantity = int(input("Enter the quantity to restock: "))
             # write code to get product by name
-            # 
+            product = inventory_manager.get_product(name)
             # write code to restock product
-            # 
+            inventory_manager.profit_tracker.buy_product(product, quantity)
+            inventory_manager.restock_product(product, quantity)
 
 
 
         elif choice == "S":
+            list_product = list(inventory_manager.list_products().keys())
+            set_autocomplete(list_product)
             name = input("Enter the name of the product: ")
             quantity = int(input("Enter the quantity to sell: "))
             # write code to get product by name
-                # 
+            product = inventory_manager.get_product(name)
             # write code to sell product
-                # 
-
+            inventory_manager.sell_product(product.name, quantity)
+            inventory_manager.profit_tracker.sell_product(product, quantity)
         elif choice == "D":
+            list_product = list(inventory_manager.list_products().keys())
+            set_autocomplete(list_product)
             name = input("Enter the name of the product: ")
             # write code to get product
-                # 
-                #
-                #
-            #if product:
-                # write code to remove product
-                # 
-                #
-                #
-                #print(f"{name} has been removed from stock.")
-            #else:
-                #print(f"{name} is not in stock.")
+            product = inventory_manager.get_product(name)
+            if product:
+                inventory_manage.remove_product(product)
+                print(f"{name} has been removed from stock.")
+            else:
+                print(f"{name} is not in stock.")
 
         elif choice == "L":
             inventory_manager.list_products()
 
         elif choice == "B":
-            # write code to print current balance
-                # 
+            print(f"Balance: {inventory_manager.profit_tracker.balance} $")
             # supprimer la ligne suivante apres avoir ecrit cotre code
             pass
         elif choice == "Q":

@@ -1,4 +1,9 @@
 #La classe "InventoryManager" est une classe qui permet de gérer un inventaire de produits. 
+import sys
+sys.path.extend(['.','..',"/workspaces/Python-OOP-Project/exercices/05.inventory_product_entry"])
+
+from product_classes import *
+from inventory_product_entry import InventoryProductEntry
 
 class InventoryManager:
     # Initialisation de la classe
@@ -13,6 +18,10 @@ class InventoryManager:
     Si c'est le cas, la fonction retourne True, sinon elle retourne False.
     """
     def product_exists(self,product:Product):
+        for inventory_product_entry_key in self.inventory:
+            if inventory_product_entry_key == product.name:
+                True
+        False
         """
         pour chaque 'inventory_product_entry_key' dans self.inventory faire:
             si 'inventory_product_entry_key' est égal à product.name alors:
@@ -26,6 +35,11 @@ class InventoryManager:
     Elle prend en argument un objet Product et une quantité initiale.
     """
     def add_product(self, product:Product, quantity):
+        if self.product_exists(product):
+            print(f"{product.name} est deja dans l'inventaire")
+        else:
+            new_inventory_product = InventoryProductEntry(product, quantity)
+            self.inventory[product.name] = new_inventory_product
         """
         SI le produit existe déjà dans l'inventaire: 
             afficher un message pour informer l'utilisateur
@@ -40,6 +54,11 @@ class InventoryManager:
     Elle prend en argument un nom de produit et supprime l'entrée correspondante dans le dictionnaire 'inventory'.
     """
     def remove_product(self, product_name):
+        if product_name in self.inventory:
+            del self.inventory[product_name]
+        else:
+            print(f"Le produit {product_name} n'est pas dans l'inventaire")
+
         #Utiliser la méthode product_exists pour vérifier si le produit existe dans l'inventaire
         #Si le produit est trouvé, supprimer le de l'inventaire
         #Sinon, afficher un message d'erreur indiquant que le produit n'a pas été trouvé
@@ -51,6 +70,10 @@ class InventoryManager:
     """
     
     def sell_product(self, product_name, quantity):
+        if product_name in self.inventory:
+            self.inventory[product_name].sell(quantity)
+        else:
+            print("La vente a échouée")
         #Utiliser une boucle pour parcourir les clés du dictionnaire 'inventory'
         #Pour chaque itération, on vérifie si le nom du produit fourni est équal à la clé du dictionnaire.
         #Si le produit est trouvé, appeler la méthode 'sell' de l'objet InventoryProductEntry correspondant avec la quantité à vendre
@@ -61,7 +84,12 @@ class InventoryManager:
     La méthode restock_product est utilisée pour restocker une quantité donnée d'un produit.
     Elle prend en argument le nom du produit et la quantité à restocker.
     """
-    def restock_product(self, product_name, quantity):
+    def restock_product(self, product, quantity):
+        if product.name in self.inventory:
+            if self.inventory[product_name].restock(quantity):
+                print("Restock réussi")
+        else:
+            self.add_product(product, quantity)
         #Vérifier si le produit existe déjà dans l'inventaire
         #Si le produit est trouvé, appeler la méthode 'restock' de l'objet InventoryProductEntry correspondant avec la quantité à restocker
         #Si le réapprovisionnement est réussi, afficher un message de confirmation
@@ -74,6 +102,11 @@ class InventoryManager:
     Elle prend en entrée un nom de produit.
     """
     def get_product(self, name):
+        if name in self.inventory:
+            return self.inventaire[name].product
+        else:
+            print(f"le produit {name} n'existe pas")
+        
         """
         pour chaque inventory_product_entry_key dans self.inventory:
             si inventory_product_entry_key == nom de produit:
@@ -87,6 +120,9 @@ class InventoryManager:
     et affiche les informations relatives à chacun d'entre eux (nom, quantité disponible, prix unitaire, coût unitaire, prix de vente unitaire, bénéfice unitaire). 
     """
     def list_products(self):
+        for key in self.inventory:
+            print(self.inventory[key])
+        return self.inventory
         """
         pour chaque clé du dictionnaire 'inventory':
             afficher la valeur correspondante à cette clé

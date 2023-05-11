@@ -39,6 +39,7 @@ def create_tree_from_dict(tree, parent_node_id, parent_dict):
         parent_node_id (str): l'identifiant du noeud parent dans l'arbre
         parent_dict (dict): le dictionnaire Python contenant les données à insérer dans l'arbre
     """
+    
     for key, value in parent_dict.items():
         if isinstance(value, dict):
             # Créer un nouveau noeud pour la clé courante du dictionnaire
@@ -48,10 +49,10 @@ def create_tree_from_dict(tree, parent_node_id, parent_dict):
             # Créer récursivement le sous-arbre pour le dictionnaire courant
             if "subclasses" in value:
                 create_tree_from_dict(tree, new_node_id, value["subclasses"])
-        else:
-            # Créer un nouveau noeud pour la feuille courante du dictionnaire
-            leaf_node_id = f"{parent_node_id}.{key}"
-            tree.create_node(tag=f"{key}: {value}", identifier=leaf_node_id, parent=parent_node_id)
+        # else:
+        #     # Créer un nouveau noeud pour la feuille courante du dictionnaire
+        #     leaf_node_id = f"{parent_node_id}.{key}"
+        #     tree.create_node(tag=f"{key}: {value}", identifier=leaf_node_id, parent=parent_node_id)
 
 def main():
     """

@@ -1,11 +1,11 @@
 #Importer les bibliothèques nécessaires
 import sys
 import unittest
-sys.path.extend(['.','..'])
+sys.path.extend(['.','..','/workspaces/Python-OOP-Project/exercices/06.inventory_manager',"/workspaces/Python-OOP-Project/exercices/05.inventory_product_entry"])
 
 #Import des classes à tester
-from classes.product_classes import Chaise, Pantalon
-from inventory.stock_manager import InventoryManager
+from product_classes import Chaise, Pantalon
+from inventory_manager import InventoryManager
 
 #Définition de la classe de test
 class TestInventoryManager(unittest.TestCase):
@@ -23,8 +23,9 @@ class TestInventoryManager(unittest.TestCase):
 
     # Test de la méthode add_product de la classe InventoryManager
     def test_add_product(self):
-        
-         """
+        self.inventory_manager.add_product(self.chaise, 5)
+        self.assertIn(self.chaise.name, self.inventory_manager.inventory)
+        """
          -Ajout de 5 chaises à l'inventaire en utilisant la méthode add_product
          -Vérification que la chaise a bien été ajoutée à l'inventaire avec la méthode assertIn ( assertIn(argument1, argument2) )
          -assertIn est une méthode fournie par le module unittest de Python qui vérifie si le premier argument est contenu dans le second argument.
@@ -32,8 +33,10 @@ class TestInventoryManager(unittest.TestCase):
 
     # Test de la méthode remove_product de la classe InventoryManager
     def test_remove_product(self):
-        
-         """
+        self.inventory_manager.add_product(self.pantalon, 5)
+        self.inventory_manager.remove_product(self.pantalon.name)
+        self.assertNotIn(self.pantalon.name, self.inventory_manager.inventory)
+        """
          -Ajout de 5 pantalons à l'inventaire en utilisant la méthode add_product
          -Suppression le pantalon de l'inventaire en utilisant la méthode remove_product
          -Vérification que le pantalon a bien été supprimé de l'inventaire avec la méthode assertNotIn ( assertNotIn(argument1, argument2) )

@@ -19,7 +19,7 @@ class ProfitTracker:
     La méthode buy_product est utilisée pour acheter un produit et mettre à jour le coût total et le solde.
     """     
     def buy_product(self, product: Product, quantity):
-        if product.cost * int(quantity) > 1000:
+        if int(product.cost) * int(quantity) > self.balance:
             print("Solde insuffisant")
             return False
         else:
@@ -114,10 +114,8 @@ class InventoryManager:
     """
     
     def sell_product(self, product_name, quantity):
-        print(product_name, self.inventory)
         if product_name in self.inventory:
-            self.inventory[product_name].sell(quantity)
-            print(f"Vente de {quantity} {product_name} effectuée")
+            return self.inventory[product_name].sell(quantity)
         else:
             print("La vente a échouée")
         #Utiliser une boucle pour parcourir les clés du dictionnaire 'inventory'

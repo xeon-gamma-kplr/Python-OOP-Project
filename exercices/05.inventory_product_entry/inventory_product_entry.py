@@ -37,6 +37,7 @@ class InventoryProductEntry:
         else:
             self.quantity -= quantity
             self.sales += self.product.price * quantity
+            print(f"Vente de {quantity} {self.product.name} effectuée")
             return True
         """
         En utilisant des conditions, vérifier: 
@@ -79,11 +80,3 @@ class InventoryProductEntry:
 # inventaire_produit.sell(20)
 # print(inventaire_produit.sales)
 # print(inventaire_produit)
-
-import sys, inspect
-def print_classes():
-    for name, obj in inspect.getmembers(sys.modules[__name__]):
-        if inspect.isclass(obj):
-            print(obj)
-
-print_classes()
